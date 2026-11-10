@@ -1,6 +1,7 @@
+from typing import Any
+
 from fastapi import FastAPI
 
-# Create the FastAPI application
 app = FastAPI(
     title="HookRelay",
     description="A reliable webhook management platform",
@@ -14,4 +15,15 @@ def health_check():
     return {
         "status": "healthy",
         "message": "HookRelay API is running"
+    }
+
+
+# Receive webhook events
+@app.post("/webhooks/{source}")
+async def receive_webhook(source: str, payload: dict[str, Any]):
+    return {
+        "status": "received",
+        "source": source,
+        "event_type": payload.get("type", "unknown"),
+        "message": "Webhook received successfully"
     }
